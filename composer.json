@@ -36,5 +36,8 @@
         "sort-packages": true
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "scripts": {
+        "test": "php vendor/bin/pest"
+    }
 }
