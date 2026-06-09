@@ -4,27 +4,26 @@ A flexible PHP collection with dot-notation and wildcard path support.
 
 ---
 
-**Collection** is a PHP library that makes working with arrays actually pleasant.
-
 Native PHP array functions are a mess — `array_map`, `array_filter`, `usort`, `array_walk` all have inconsistent argument order, most of them don't chain, and processing nested data means writing loops inside loops. Laravel's Collection solves this elegantly, but drags the entire framework with it. Collection is a standalone, zero-dependency package that works in any PHP project.
 
 ---
 
 ## Features
 
-**Dot-notation & wildcards.** Access, write, filter, and remove deeply nested data with paths like `users.*.emails.*.address` — no more chaining `foreach` or unpacking nested arrays by hand. Wildcards work across `get`, `set`, `remove`, and most other methods, and you can key results by any field with `*[id]` syntax.
-
-**100+ methods, one fluent interface.** Filtering (`where`, `whereIn`, `whereBetween`, `whereContains`, `whereMatches`), transformation (`map`, `evolve`, `mapPath`, `flatMap`, `scan`), aggregates (`sum`, `avg`, `median`, `standardDeviation`, `percentage`), multi-column sorting, pagination, set operations (`diff`, `intersect`, `zip`, `crossJoin`, `symmetricDiff`) — everything chains, everything returns a collection.
-
-**Contracts for every concern.** Fourteen focused interfaces — `Filterable`, `Sortable`, `Aggregatable`, `Sliceable` and more — let you type-hint against exactly what a function needs instead of depending on the concrete class. Better for testing, better for boundaries, better for static analysis.
-
-**Explicit about mutation.** Transforming methods return a new collection. Mutating methods (`push`, `pop`, `splice`, `transform`) are named and documented to make it obvious when you're changing state in place.
-
-**Pipelines built in.** `pipe`, `pipeThrough`, `tap`, `when`, `unless`, `whenEmpty` let you build readable processing chains without intermediate variables or broken-up logic.
-
-**Macros.** Add your own methods to every collection at runtime — no subclassing required.
-
-**ArrayAccess with dot-notation.** `$c['user.address.city']` just works.
+- **Dot-notation & wildcards.**
+  - Access, write, filter, and remove deeply nested data with paths like `users.*.emails.*.address` — no more chaining `foreach` or unpacking nested arrays by hand. Wildcards work across `get`, `set`, `remove`, and most other methods, and you can key results by any field with `*[id]` syntax.
+- **100+ methods, one fluent interface.**
+  - Filtering (`where`, `whereIn`, `whereBetween`, `whereContains`, `whereMatches`), transformation (`map`, `evolve`, `mapPath`, `flatMap`, `scan`), aggregates (`sum`, `avg`, `median`, `standardDeviation`, `percentage`), multi-column sorting, pagination, set operations (`diff`, `intersect`, `zip`, `crossJoin`, `symmetricDiff`) — everything chains, everything returns a collection.
+- **Contracts for every concern.**
+  - Fourteen focused interfaces — `Filterable`, `Sortable`, `Aggregatable`, `Sliceable` and more — let you type-hint against exactly what a function needs instead of depending on the concrete class. Better for testing, better for boundaries, better for static analysis.
+- **Explicit about mutation.**
+  - Transforming methods return a new collection. Mutating methods (`push`, `pop`, `splice`, `transform`) are named and documented to make it obvious when you're changing state in place.
+- **Pipelines built in.**
+  - `pipe`, `pipeThrough`, `tap`, `when`, `unless`, `whenEmpty` let you build readable processing chains without intermediate variables or broken-up logic.
+- **Macros.**
+  - Add your own methods to every collection at runtime — no subclassing required.
+- **ArrayAccess with dot-notation.**
+  - `$c['user.address.city']` just works.
 
 ---
 
@@ -41,7 +40,7 @@ composer require collectable/collection
 ```php
 use Collectable\Collection;
 
-$helloWorld = new Collection(['hello', 'world', null])
+$helloWorld = new Collection(['hello', 'world'])
     ->map(fn($word) => strtoupper($word))
     ->join(' '); // "HELLO WORLD"
 ```
