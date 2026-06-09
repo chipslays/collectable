@@ -1,0 +1,40 @@
+{
+    "name": "collectable/collection",
+    "description": "A flexible PHP collection with dot-notation and wildcard path support.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["collection", "dot-notation", "wildcard", "array"],
+    "homepage": "https://github.com/chipslays/collectable",
+    "support": {
+        "issues": "https://github.com/chipslays/collectable/issues",
+        "source": "https://github.com/chipslays/collectable"
+    },
+    "require": {
+        "php": "^8.4"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "*",
+        "pestphp/pest": "^3.0 || ^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Collectable\\": "src/"
+        },
+        "files": [
+            "helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
