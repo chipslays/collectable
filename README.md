@@ -90,15 +90,15 @@ $c = Collection::make(['apple', 'banana', 'cherry']);
 Wrap any value into a collection. If it is already a collection it is returned as-is.
 ```php
 Collection::wrap('hello');       // ['hello']
-Collection::wrap([1, 2, 3]);    // [1, 2, 3]
-Collection::wrap($collection);  // same collection
+Collection::wrap([1, 2, 3]);     // [1, 2, 3]
+Collection::wrap($collection);   // same collection
 ```
 
 ### `unwrap(mixed $value)`
 Convert a collection (or array) back to a plain PHP array.
 ```php
 Collection::unwrap($collection); // plain array
-Collection::unwrap([1, 2, 3]);  // [1, 2, 3]
+Collection::unwrap([1, 2, 3]);   // [1, 2, 3]
 ```
 
 ### `times(int $n, callable $callback)`
@@ -112,7 +112,7 @@ Collection::times(5, fn($i) => $i * 2);
 Create a collection of numbers in a range.
 ```php
 Collection::range(1, 5);           // [1, 2, 3, 4, 5]
-Collection::range(0, 1, 0.25);    // [0, 0.25, 0.5, 0.75, 1.0]
+Collection::range(0, 1, 0.25);     // [0, 0.25, 0.5, 0.75, 1.0]
 ```
 
 ### `fromJson(string $json)`
@@ -132,7 +132,7 @@ Retrieve a value by dot-notation path. Supports wildcards.
 $c = Collection::make(['user' => ['name' => 'Alice', 'age' => 30]]);
 
 $c->get('user.name');           // 'Alice'
-$c->get('user.email', 'n/a'); // 'n/a'  (default)
+$c->get('user.email', 'n/a');   // 'n/a'  (default)
 ```
 
 ### `set(string $path, mixed $value)`
@@ -177,8 +177,8 @@ $array = $c->all();
 ### `keys(?string $path = null)`
 Return all top-level keys, or keys of the array at a given path.
 ```php
-$c->keys();          // ['user', 'meta']
-$c->keys('user');    // ['name', 'age']
+$c->keys();       // ['user', 'meta']
+$c->keys('user'); // ['name', 'age']
 ```
 
 ### `values()`
@@ -201,8 +201,8 @@ $c->collect('users')->where('active', true)->pluck('name');
 ### `has(string $path)`
 Check whether a path exists and the value is **not null**.
 ```php
-$c->has('user.name');       // true
-$c->has('user.nickname');   // false
+$c->has('user.name');     // true
+$c->has('user.nickname'); // false
 ```
 
 ### `hasKey(string $path)`
@@ -233,7 +233,7 @@ $c->isNotEmpty(); // true
 ### `isList()`
 Check whether the items form a plain indexed array (0, 1, 2, …).
 ```php
-Collection::make([1, 2, 3])->isList();           // true
+Collection::make([1, 2, 3])->isList();            // true
 Collection::make(['a' => 1, 'b' => 2])->isList(); // false
 ```
 
@@ -246,8 +246,8 @@ Collection::make(['a' => 1])->isAssoc(); // true
 ### `count(?string $path = null)`
 Count top-level items, or items at a given path.
 ```php
-$c->count();          // number of top-level items
-$c->count('users');   // count of the 'users' array
+$c->count();        // number of top-level items
+$c->count('users'); // count of the 'users' array
 ```
 
 ---
@@ -257,8 +257,8 @@ $c->count('users');   // count of the 'users' array
 ### `first(?callable $callback, mixed $default = null)`
 Return the first item, or the first item satisfying a callback.
 ```php
-$c->first();                            // first item
-$c->first(fn($u) => $u['active']);      // first active user
+$c->first();                                  // first item
+$c->first(fn($u) => $u['active']);            // first active user
 $c->first(fn($u) => $u['age'] > 18, 'guest'); // with default
 ```
 
@@ -285,14 +285,14 @@ $users->firstWhere('age', '>=', 18);
 ### `firstKey(?callable $callback)` / `lastKey(?callable $callback)`
 Return the key of the first (or last) matching item.
 ```php
-$c->firstKey();                           // key of first item
-$c->firstKey(fn($v) => $v['active']);     // key of first active item
+$c->firstKey();                       // key of first item
+$c->firstKey(fn($v) => $v['active']); // key of first active item
 ```
 
 ### `value(string $path, mixed $default = null)`
 Get the value at `$path` from the **first** item in the collection.
 ```php
-$users->value('email');      // email of the first user
+$users->value('email'); // email of the first user
 ```
 
 ### `find(string $path, mixed $value, mixed $default = null)`
@@ -341,8 +341,8 @@ Collection::make([1, 2, 3, 4])->before(3); // 2
 Keep only items that satisfy a callback or a path condition.
 ```php
 $c->filter(fn($u) => $u['active']);
-$c->filter('active');            // items where active is truthy
-$c->filter('role', 'admin');    // items where role === 'admin'
+$c->filter('active');        // items where active is truthy
+$c->filter('role', 'admin'); // items where role === 'admin'
 ```
 
 ### `reject(string|callable $pathOrCallback, mixed $value = null)`
@@ -358,9 +358,9 @@ Filter by a dot-notation path with an optional comparison operator.
 Supported operators: `=`, `==`, `===`, `!=`, `!==`, `<>`, `>`, `>=`, `<`, `<=`
 ```php
 $users->where('active');
-$users->where('role', 'admin');          // loose ==
+$users->where('role', 'admin');    // loose ==
 $users->where('age', '>=', 18);
-$users->where('status', '===', 1);      // strict
+$users->where('status', '===', 1); // strict
 ```
 
 ### `whereIn(string $path, array $values)` / `whereNotIn(string $path, array $values)`
@@ -373,7 +373,7 @@ $users->whereNotIn('status', ['banned', 'inactive']);
 ### `whereNull(?string $path)` / `whereNotNull(?string $path)`
 Filter items where the path value is (or is not) `null`.
 ```php
-$users->whereNull('deleted_at');     // soft-deleted
+$users->whereNull('deleted_at');    // soft-deleted
 $users->whereNotNull('deleted_at'); // active
 ```
 
@@ -681,7 +681,7 @@ $users->groupBy(fn($u) => $u['active'] ? 'active' : 'inactive');
 ### `countBy(string|callable|null $by = null)`
 Count occurrences per group.
 ```php
-$c->countBy();              // count each unique value
+$c->countBy();             // count each unique value
 $users->countBy('role');   // ['admin' => 2, 'editor' => 5]
 ```
 
@@ -726,7 +726,7 @@ $products->max('price');
 ### `minBy(string|callable $by)` / `maxBy(string|callable $by)`
 Return the **item** with the minimum or maximum value at a path.
 ```php
-$cheapest = $products->minBy('price');  // returns the whole item
+$cheapest = $products->minBy('price'); // returns the whole item
 $priciest = $products->maxBy('price');
 ```
 
@@ -785,15 +785,15 @@ $users->every('role', 'admin');
 ### `slice(int $offset, ?int $length = null)`
 Return a sub-range of items.
 ```php
-$c->slice(0, 10);  // first 10 items
-$c->slice(-3);     // last 3 items
+$c->slice(0, 10); // first 10 items
+$c->slice(-3);    // last 3 items
 ```
 
 ### `take(int $n)`
 Return the first `$n` (or last, if negative) items.
 ```php
-$c->take(3);   // first 3
-$c->take(-2);  // last 2
+$c->take(3);  // first 3
+$c->take(-2); // last 2
 ```
 
 ### `skip(int $n)`
@@ -847,8 +847,8 @@ Collection::make([1, 2, 3, 4, 5])->split(3);
 ### `nth(int $step, int $offset = 0)`
 Return every `$step`-th item.
 ```php
-$c->nth(2);       // 1st, 3rd, 5th …
-$c->nth(3, 1);   // 2nd, 5th, 8th …
+$c->nth(2);    // 1st, 3rd, 5th …
+$c->nth(3, 1); // 2nd, 5th, 8th …
 ```
 
 ### `pad(int $size, mixed $value = null)`
@@ -969,8 +969,8 @@ $c->shuffle();
 ### `random(int $n = 1)`
 Return `$n` random items. Returns the item directly when `$n === 1`.
 ```php
-$c->random();   // one random item
-$c->random(3);  // Collection of 3 random items
+$c->random();  // one random item
+$c->random(3); // Collection of 3 random items
 ```
 
 ---
@@ -1098,8 +1098,8 @@ $c->prepend('home', 'first');
 ### `insert(int $index, mixed $value)`
 Insert a value at a specific index (non-mutating, returns new collection).
 ```php
-$c->insert(2, 'x');   // inject at position 2
-$c->insert(-1, 'x');  // before the last item
+$c->insert(2, 'x');  // inject at position 2
+$c->insert(-1, 'x'); // before the last item
 ```
 
 ### `pop()`
@@ -1138,11 +1138,11 @@ $clone = $c->copy();
 ### `join(string $glue, ?string $finalGlue = null)` / `implode(string $value, ?string $glue = null)`
 Join all items into a string.
 ```php
-$c->join(', ');                   // 'Alice, Bob, Carol'
-$c->join(', ', ' and ');          // 'Alice, Bob and Carol'
+$c->join(', '); // 'Alice, Bob, Carol'
+$c->join(', ', ' and '); // 'Alice, Bob and Carol'
 
-$users->implode('name', ', ');    // pluck 'name' then join
-$c->implode(', ');                // join scalar items
+$users->implode('name', ', '); // pluck 'name' then join
+$c->implode(', '); // join scalar items
 ```
 
 ---
@@ -1200,10 +1200,10 @@ $c = Collection::make([
 ]);
 
 // Read a single path
-$c->get('users.0.name');            // 'Alice'
+$c->get('users.0.name'); // 'Alice'
 
 // Wildcard: get all names (keyed by array index)
-$c->get('users.*.name');            // [0 => 'Alice', 1 => 'Bob']
+$c->get('users.*.name'); // [0 => 'Alice', 1 => 'Bob']
 
 // Nested wildcards: all email addresses
 $c->get('users.*.emails.*.address');
@@ -1246,10 +1246,10 @@ $c->get('users.*[id].emails.*.address');
 The collection implements `ArrayAccess`, so you can use bracket syntax with dot-notation paths.
 
 ```php
-$c['user.name'];                // same as get('user.name')
-$c['user.name'] = 'Alice';     // same as set('user.name', 'Alice')
-isset($c['user.name']);         // same as has('user.name')
-unset($c['user.name']);         // same as remove('user.name')
+$c['user.name'];           // same as get('user.name')
+$c['user.name'] = 'Alice'; // same as set('user.name', 'Alice')
+isset($c['user.name']);    // same as has('user.name')
+unset($c['user.name']);    // same as remove('user.name')
 ```
 
 ---
