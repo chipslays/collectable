@@ -80,6 +80,14 @@ $helloWorld = collection(...)->map(...)->join(...);
 
 ## Creating a Collection
 
+```php
+$c = new Collection;
+$c = new Collection(['apple', 'banana', 'cherry']);
+
+$c = collection();
+$c = collection(['apple', 'banana', 'cherry']);
+```
+
 ### `make(array $items, string $wildcard = '*', string $delimiter = '.')`
 Create a collection from an array.
 ```php
