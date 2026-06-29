@@ -8,7 +8,7 @@
 
 ---
 
-> [!NOTE] 
+> [!NOTE]
 > Native PHP array functions are a mess — `array_map`, `array_filter`, `usort`, `array_walk` all have inconsistent argument order, most of them don't chain, and processing nested data means writing loops inside loops. Collection is a standalone, zero-dependency package that works in any PHP project.
 
 ---
@@ -37,7 +37,7 @@
 Install package via Composer:
 
 ```bash
-composer require collectable/collection
+composer require collectable/collection --prefer-dist
 ```
 
 ## Usage
