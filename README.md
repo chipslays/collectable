@@ -1217,6 +1217,10 @@ $c->get('users.*.name'); // [0 => 'Alice', 1 => 'Bob']
 $c->get('users.*.emails.*.address');
 // [0 => [0 => 'alice@a.com'], 1 => [0 => 'bob@b.com', 1 => 'bob2@b.com']]
 
+Wildcard with a custom key: `*[field]`
+$c->get('users.*[id].emails.*.address');
+// [1 => [0 => 'alice@a.com'], 2 => [0 => 'bob@b.com', 1 => 'bob2@b.com']]
+
 // Set a value on every item
 $c->set('users.*.active', true);
 
@@ -1233,11 +1237,11 @@ by writing `*[field]` in the path segment.
 ```php
 // Get names keyed by user id instead of 0, 1, 2 …
 $c->get('users.*[id].name');
-// [1 => 'Alice', 2 => 'Bob']
+// [1337 => 'Alice', 1338 => 'Bob']
 
 // Nested wildcards — outer key comes from the user id
 $c->get('users.*[id].emails.*.address');
-// [1 => [0 => 'alice@a.com'], 2 => [0 => 'bob@b.com', 1 => 'bob2@b.com']]
+// [1337 => [0 => 'alice@a.com'], 1338 => [0 => 'bob@b.com', 1 => 'bob2@b.com']]
 
 ```
 
