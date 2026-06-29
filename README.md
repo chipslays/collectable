@@ -5,14 +5,14 @@ A flexible PHP collection with dot-notation and wildcard path support.
 ---
 
 > [!NOTE] 
-> Native PHP array functions are a mess — `array_map`, `array_filter`, `usort`, `array_walk` all have inconsistent argument order, most of them don't chain, and processing nested data means writing loops inside loops. Laravel's Collection solves this elegantly, but drags the entire framework with it. Collection is a standalone, zero-dependency package that works in any PHP project.
+> Native PHP array functions are a mess — `array_map`, `array_filter`, `usort`, `array_walk` all have inconsistent argument order, most of them don't chain, and processing nested data means writing loops inside loops. Collection is a standalone, zero-dependency package that works in any PHP project.
 
 ---
 
 ## Features
 
 - **Dot-notation & wildcards.**
-  - Access, write, filter, and remove deeply nested data with paths like `users.*.emails.*.address` — no more chaining `foreach` or unpacking nested arrays by hand. Wildcards work across `get`, `set`, `remove`, and most other methods, and you can key results by any field with `*[id]` syntax.
+  - Access, write, filter, and remove deeply nested data with paths like `users.*.emails.*.address` or  `users.*[id].emails.*.address` — no more chaining `foreach` or unpacking nested arrays by hand. Wildcards work across `get`, `set`, `remove`, and most other methods, and you can key results by any field with `*[field]` syntax.
 - **100+ methods, one fluent interface.**
   - Filtering (`where`, `whereIn`, `whereBetween`, `whereContains`, `whereMatches`), transformation (`map`, `evolve`, `mapPath`, `flatMap`, `scan`), aggregates (`sum`, `avg`, `median`, `standardDeviation`, `percentage`), multi-column sorting, pagination, set operations (`diff`, `intersect`, `zip`, `crossJoin`, `symmetricDiff`) — everything chains, everything returns a collection.
 - **Contracts for every concern.**
