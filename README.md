@@ -1,10 +1,11 @@
-# Collection
+# Collection 📁
 
 A flexible PHP collection with dot-notation and wildcard path support.
 
 ---
 
-Native PHP array functions are a mess — `array_map`, `array_filter`, `usort`, `array_walk` all have inconsistent argument order, most of them don't chain, and processing nested data means writing loops inside loops. Laravel's Collection solves this elegantly, but drags the entire framework with it. Collection is a standalone, zero-dependency package that works in any PHP project.
+> [!NOTE] 
+> Native PHP array functions are a mess — `array_map`, `array_filter`, `usort`, `array_walk` all have inconsistent argument order, most of them don't chain, and processing nested data means writing loops inside loops. Laravel's Collection solves this elegantly, but drags the entire framework with it. Collection is a standalone, zero-dependency package that works in any PHP project.
 
 ---
 
