@@ -1217,7 +1217,7 @@ $c->get('users.*.name'); // [0 => 'Alice', 1 => 'Bob']
 $c->get('users.*.emails.*.address');
 // [0 => [0 => 'alice@a.com'], 1 => [0 => 'bob@b.com', 1 => 'bob2@b.com']]
 
-Wildcard with a custom key: `*[field]`
+// Wildcard with a custom key: `*[field]`
 $c->get('users.*[id].emails.*.address');
 // [1 => [0 => 'alice@a.com'], 2 => [0 => 'bob@b.com', 1 => 'bob2@b.com']]
 
