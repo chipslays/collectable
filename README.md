@@ -1,6 +1,10 @@
-# Collection 📁
+<h1 align="center">
+  Collection 📁
+</h1>
 
-A flexible PHP collection with dot-notation and wildcard path support.
+<p align="center">
+  A flexible PHP collection with dot-notation and wildcard path support.
+<p>
 
 ---
 
