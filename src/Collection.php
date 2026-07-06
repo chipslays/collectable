@@ -9,7 +9,13 @@ use ArrayIterator;
 use Collectable\Concerns\Macroable;
 use Collectable\Contracts\Arrayable;
 use Collectable\Contracts\Collectable;
+use InvalidArgumentException;
 use IteratorAggregate;
+use OverflowException;
+use RuntimeException;
+use stdClass;
+use UnderflowException;
+use UnexpectedValueException;
 
 /**
  * A flexible collection with dot-notation and wildcard path support.
@@ -815,7 +821,7 @@ class Collection implements Collectable
     /**
      * Return the first item (optionally matching $callback), or throw if none found.
      *
-     * @throws \RuntimeException when no item matches
+     * @throws RuntimeException when no item matches
      *
      * @example firstOrFail()
      * @example firstOrFail(fn($u) => $u['active'])
@@ -837,7 +843,7 @@ class Collection implements Collectable
         }
 
         if ($result === $sentinel) {
-            throw new \RuntimeException('The collection contains no matching items.');
+            throw new RuntimeException('The collection contains no matching items.');
         }
 
         return $result;
@@ -1285,8 +1291,8 @@ class Collection implements Collectable
      * - sole('id', 42)       -> exactly one item where id == 42
      * - sole(callable)       -> exactly one item satisfying the callback
      *
-     * @throws \UnderflowException  when no items match
-     * @throws \OverflowException   when multiple items match
+     * @throws UnderflowException  when no items match
+     * @throws OverflowException   when multiple items match
      *
      * @example $user = $users->sole('id', $id)
      */
@@ -1303,11 +1309,11 @@ class Collection implements Collectable
         }
 
         if ($filtered->isEmpty()) {
-            throw new \UnderflowException('The collection contains no matching items.');
+            throw new UnderflowException('The collection contains no matching items.');
         }
 
         if ($filtered->count() > 1) {
-            throw new \OverflowException('The collection contains multiple matching items.');
+            throw new OverflowException('The collection contains multiple matching items.');
         }
 
         return $filtered->first();
@@ -1327,7 +1333,7 @@ class Collection implements Collectable
             $this->sole(...func_get_args());
 
             return true;
-        } catch (\UnderflowException | \OverflowException) {
+        } catch (UnderflowException | OverflowException) {
             return false;
         }
     }
@@ -2035,7 +2041,7 @@ class Collection implements Collectable
     public function chunk(int $size): static
     {
         if ($size <= 0) {
-            throw new \InvalidArgumentException('Chunk size must be greater than zero.');
+            throw new InvalidArgumentException('Chunk size must be greater than zero.');
         }
 
         return new static(
@@ -3128,7 +3134,7 @@ class Collection implements Collectable
      * - $n === 1 (default) -> returns the item directly
      * - $n > 1             -> returns a new Collection
      *
-     * @throws \InvalidArgumentException when $n > count
+     * @throws InvalidArgumentException when $n > count
      *
      * @example random()   // one random item
      * @example random(3)  // Collection of 3 random items
@@ -3138,7 +3144,7 @@ class Collection implements Collectable
         $count = count($this->items);
 
         if ($n > $count) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 "Cannot request {$n} random items from a collection of {$count}."
             );
         }
@@ -3811,7 +3817,7 @@ class Collection implements Collectable
      * 'null', 'numeric', 'scalar') and fully-qualified class/interface names.
      * An array of types is accepted as OR logic.
      *
-     * @throws \UnexpectedValueException when an item has an unexpected type
+     * @throws UnexpectedValueException when an item has an unexpected type
      *
      * @example ensure('int')
      * @example ensure(['int', 'float'])
@@ -3843,7 +3849,7 @@ class Collection implements Collectable
             if (!$ok) {
                 $actual   = is_object($item) ? $item::class : gettype($item);
                 $expected = implode('|', $types);
-                throw new \UnexpectedValueException(
+                throw new UnexpectedValueException(
                     "Expected item of type [{$expected}], got [{$actual}]."
                 );
             }
@@ -3920,7 +3926,7 @@ class Collection implements Collectable
     {
         static $sentinel = null;
 
-        return $sentinel ??= new \stdClass();
+        return $sentinel ??= new stdClass();
     }
 
     /**
