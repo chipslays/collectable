@@ -8,7 +8,6 @@ use ArrayAccess;
 use ArrayIterator;
 use Collectable\Concerns\Macroable;
 use Collectable\Contracts\Arrayable;
-use Collectable\Contracts\Collectable;
 use InvalidArgumentException;
 use IteratorAggregate;
 use JsonException;
@@ -18,6 +17,9 @@ use stdClass;
 use Traversable;
 use UnderflowException;
 use UnexpectedValueException;
+use Countable;
+use JsonSerializable;
+use Stringable;
 
 /**
  * A flexible collection with dot-notation and wildcard path support.
@@ -33,7 +35,7 @@ use UnexpectedValueException;
  * @template-implements ArrayAccess<string, mixed>
  * @template-implements IteratorAggregate<string|int, mixed>
  */
-class Collection implements Collectable
+class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate, JsonSerializable, Stringable
 {
     use Macroable;
 
@@ -82,7 +84,7 @@ class Collection implements Collectable
      * Useful for wildcard paths that return nested arrays — instead of wrapping
      * the result manually you get a Collection ready for further chaining.
      *
-     * @example collect('users.*.emails.*.address')->flatten()->values()->all()
+     * @example collect('users.*.emails.*.address')->flatten()->values()->toArray()
      * @example collect('roles')->where('active', true)
      */
     public function collect(?string $path = null, mixed $default = null): static
@@ -140,13 +142,13 @@ class Collection implements Collectable
      *
      * Counterpart to wrap() — always returns a plain array.
      *
-     * @example unwrap($collection)  // same as $collection->all()
+     * @example unwrap($collection)  // same as $collection->toArray()
      * @example unwrap([1, 2, 3])    // returns as-is
      * @example unwrap('hello')      // ['hello']
      */
     public static function unwrap(mixed $value): array
     {
-        return $value instanceof static ? $value->all() : (array) $value;
+        return $value instanceof static ? $value->toArray() : (array) $value;
     }
 
     /**
@@ -363,7 +365,7 @@ class Collection implements Collectable
     {
         $this->items = array_merge(
             $this->items,
-            $items instanceof Arrayable ? $items->all() : $items,
+            $items instanceof Arrayable ? $items->toArray() : $items,
         );
 
         return $this;
@@ -379,7 +381,7 @@ class Collection implements Collectable
      */
     public function mergeRecursive(array|Arrayable $items): static
     {
-        $data        = $items instanceof Arrayable ? $items->all() : $items;
+        $data        = $items instanceof Arrayable ? $items->toArray() : $items;
         $this->items = array_merge_recursive($this->items, $data);
 
         return $this;
@@ -396,7 +398,7 @@ class Collection implements Collectable
      */
     public function replace(array|Arrayable $items): static
     {
-        $data = $items instanceof Arrayable ? $items->all() : $items;
+        $data = $items instanceof Arrayable ? $items->toArray() : $items;
 
         return new static(array_replace($this->items, $data), $this->wildcard, $this->delimiter);
     }
@@ -408,7 +410,7 @@ class Collection implements Collectable
      */
     public function replaceRecursive(array|Arrayable $items): static
     {
-        $data = $items instanceof Arrayable ? $items->all() : $items;
+        $data = $items instanceof Arrayable ? $items->toArray() : $items;
 
         return new static(array_replace_recursive($this->items, $data), $this->wildcard, $this->delimiter);
     }
@@ -423,7 +425,7 @@ class Collection implements Collectable
      */
     public function concat(array|Arrayable $items): static
     {
-        $data        = array_values($items instanceof Arrayable ? $items->all() : $items);
+        $data        = array_values($items instanceof Arrayable ? $items->toArray() : $items);
         $this->items = array_merge($this->items, $data);
 
         return $this;
@@ -439,7 +441,7 @@ class Collection implements Collectable
      */
     public function union(array|Arrayable $items): static
     {
-        $data = $items instanceof Arrayable ? $items->all() : $items;
+        $data = $items instanceof Arrayable ? $items->toArray() : $items;
 
         return new static($this->items + $data, $this->wildcard, $this->delimiter);
     }
@@ -1481,7 +1483,7 @@ class Collection implements Collectable
             return array_sum(array_map($pathOrCallback, $this->items));
         }
 
-        $values = $pathOrCallback !== null ? $this->pluck($pathOrCallback)->all() : $this->items;
+        $values = $pathOrCallback !== null ? $this->pluck($pathOrCallback)->toArray() : $this->items;
 
         return array_sum($values);
     }
@@ -1499,7 +1501,7 @@ class Collection implements Collectable
             return array_product(array_map($pathOrCallback, $this->items));
         }
 
-        $values = $pathOrCallback !== null ? $this->pluck($pathOrCallback)->all() : $this->items;
+        $values = $pathOrCallback !== null ? $this->pluck($pathOrCallback)->toArray() : $this->items;
 
         return array_product($values);
     }
@@ -1516,7 +1518,7 @@ class Collection implements Collectable
         if (is_callable($pathOrCallback)) {
             $values = array_map($pathOrCallback, $this->items);
         } else {
-            $values = $pathOrCallback !== null ? $this->pluck($pathOrCallback)->all() : $this->items;
+            $values = $pathOrCallback !== null ? $this->pluck($pathOrCallback)->toArray() : $this->items;
         }
 
         $count = count($values);
@@ -1544,7 +1546,7 @@ class Collection implements Collectable
         if (is_callable($pathOrCallback)) {
             $values = array_map($pathOrCallback, $this->items);
         } else {
-            $values = $pathOrCallback !== null ? $this->pluck($pathOrCallback)->all() : $this->items;
+            $values = $pathOrCallback !== null ? $this->pluck($pathOrCallback)->toArray() : $this->items;
         }
 
         return $values === [] ? null : min($values);
@@ -1562,7 +1564,7 @@ class Collection implements Collectable
         if (is_callable($pathOrCallback)) {
             $values = array_map($pathOrCallback, $this->items);
         } else {
-            $values = $pathOrCallback !== null ? $this->pluck($pathOrCallback)->all() : $this->items;
+            $values = $pathOrCallback !== null ? $this->pluck($pathOrCallback)->toArray() : $this->items;
         }
 
         return $values === [] ? null : max($values);
@@ -1655,7 +1657,7 @@ class Collection implements Collectable
     public function median(?string $path = null): float|null
     {
         $values = $path !== null
-            ? array_values($this->pluck($path)->all())
+            ? array_values($this->pluck($path)->toArray())
             : array_values($this->items);
 
         $count = count($values);
@@ -1683,7 +1685,7 @@ class Collection implements Collectable
      */
     public function mode(?string $path = null): static
     {
-        $values = $path !== null ? $this->pluck($path)->all() : $this->items;
+        $values = $path !== null ? $this->pluck($path)->toArray() : $this->items;
 
         if ($values === []) {
             return new static([], $this->wildcard, $this->delimiter);
@@ -1724,7 +1726,7 @@ class Collection implements Collectable
     public function standardDeviation(?string $path = null, bool $sample = false): float|null
     {
         $values = $path !== null
-            ? array_values($this->pluck($path)->all())
+            ? array_values($this->pluck($path)->toArray())
             : array_values($this->items);
 
         $count = count($values);
@@ -1887,7 +1889,7 @@ class Collection implements Collectable
     /**
      * Swap keys and values.
      *
-     * @example Collection::make(['a' => 1, 'b' => 2])->flip()->all()
+     * @example Collection::make(['a' => 1, 'b' => 2])->flip()->toArray()
      *          // [1 => 'a', 2 => 'b']
      */
     public function flip(): static
@@ -2235,7 +2237,7 @@ class Collection implements Collectable
     {
         if ($glue !== null) {
             // path mode: first arg is a field path, second is the glue
-            return implode($glue, array_values($this->pluck($value)->all()));
+            return implode($glue, array_values($this->pluck($value)->toArray()));
         }
 
         // scalar mode: first arg is the glue
@@ -3017,14 +3019,14 @@ class Collection implements Collectable
     /**
      * Collapse all nested arrays (or Collections) into a single flat array.
      *
-     * @example Collection::make([[1, 2], [3, 4]])->collapse()->all()  // [1,2,3,4]
+     * @example Collection::make([[1, 2], [3, 4]])->collapse()->toArray()  // [1,2,3,4]
      */
     public function collapse(): static
     {
         $result = [];
         foreach ($this->items as $item) {
             if ($item instanceof self) {
-                array_push($result, ...$item->all());
+                array_push($result, ...$item->toArray());
             } elseif (is_array($item)) {
                 array_push($result, ...$item);
             } else {
@@ -3087,7 +3089,7 @@ class Collection implements Collectable
     /**
      * Repeat every item in the collection $times times.
      *
-     * @example Collection::make([1, 2])->multiply(3)->all()  // [1,2,1,2,1,2]
+     * @example Collection::make([1, 2])->multiply(3)->toArray()  // [1,2,1,2,1,2]
      */
     public function multiply(int $times): static
     {
@@ -3129,12 +3131,12 @@ class Collection implements Collectable
     /**
      * Combine this collection (used as keys) with $values.
      *
-     * @example Collection::make(['a', 'b'])->combine([1, 2])->all()
+     * @example Collection::make(['a', 'b'])->combine([1, 2])->toArray()
      *          // ['a' => 1, 'b' => 2]
      */
     public function combine(array|Arrayable $values): static
     {
-        $vals = $values instanceof Arrayable ? array_values($values->all()) : array_values($values);
+        $vals = $values instanceof Arrayable ? array_values($values->toArray()) : array_values($values);
 
         return new static(
             array_combine(array_values($this->items), $vals),
@@ -3198,7 +3200,7 @@ class Collection implements Collectable
      */
     public function diff(array|Arrayable $items): static
     {
-        $compare = $items instanceof Arrayable ? $items->all() : $items;
+        $compare = $items instanceof Arrayable ? $items->toArray() : $items;
 
         return new static(
             array_values(array_diff($this->items, $compare)),
@@ -3214,7 +3216,7 @@ class Collection implements Collectable
      */
     public function diffAssoc(array|Arrayable $items): static
     {
-        $compare = $items instanceof Arrayable ? $items->all() : $items;
+        $compare = $items instanceof Arrayable ? $items->toArray() : $items;
 
         return new static(
             array_diff_assoc($this->items, $compare),
@@ -3230,7 +3232,7 @@ class Collection implements Collectable
      */
     public function diffKeys(array|Arrayable $items): static
     {
-        $compare = $items instanceof Arrayable ? $items->all() : $items;
+        $compare = $items instanceof Arrayable ? $items->toArray() : $items;
 
         return new static(
             array_diff_key($this->items, $compare),
@@ -3246,7 +3248,7 @@ class Collection implements Collectable
      */
     public function intersect(array|Arrayable $items): static
     {
-        $compare = $items instanceof Arrayable ? $items->all() : $items;
+        $compare = $items instanceof Arrayable ? $items->toArray() : $items;
 
         return new static(
             array_values(array_intersect($this->items, $compare)),
@@ -3262,7 +3264,7 @@ class Collection implements Collectable
      */
     public function intersectByKeys(array|Arrayable $items): static
     {
-        $compare = $items instanceof Arrayable ? $items->all() : $items;
+        $compare = $items instanceof Arrayable ? $items->toArray() : $items;
 
         return new static(
             array_intersect_key($this->items, $compare),
@@ -3279,7 +3281,7 @@ class Collection implements Collectable
      */
     public function intersectAssoc(array|Arrayable $items): static
     {
-        $compare = $items instanceof Arrayable ? $items->all() : $items;
+        $compare = $items instanceof Arrayable ? $items->toArray() : $items;
 
         return new static(
             array_intersect_assoc($this->items, $compare),
@@ -3298,7 +3300,7 @@ class Collection implements Collectable
      */
     public function symmetricDiff(array|Arrayable $items): static
     {
-        $compare = $items instanceof Arrayable ? $items->all() : $items;
+        $compare = $items instanceof Arrayable ? $items->toArray() : $items;
 
         $onlyInThis  = array_diff($this->items, $compare);
         $onlyInOther = array_diff($compare, $this->items);
@@ -3320,7 +3322,7 @@ class Collection implements Collectable
      */
     public function diffUsing(array|Arrayable $items, callable $comparator): static
     {
-        $compare = $items instanceof Arrayable ? $items->all() : $items;
+        $compare = $items instanceof Arrayable ? $items->toArray() : $items;
 
         return new static(
             array_values(array_udiff($this->items, $compare, $comparator)),
@@ -3339,7 +3341,7 @@ class Collection implements Collectable
      */
     public function intersectUsing(array|Arrayable $items, callable $comparator): static
     {
-        $compare = $items instanceof Arrayable ? $items->all() : $items;
+        $compare = $items instanceof Arrayable ? $items->toArray() : $items;
 
         return new static(
             array_values(array_uintersect($this->items, $compare, $comparator)),
@@ -4146,7 +4148,7 @@ class Collection implements Collectable
         $result = [];
         foreach ($array as $item) {
             if ($item instanceof self) {
-                $item = $item->all();
+                $item = $item->toArray();
             }
             if (is_array($item) && $depth > 0) {
                 array_push($result, ...$this->flattenValues($item, $depth - 1));
