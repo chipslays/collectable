@@ -8,12 +8,14 @@ if (! function_exists('collection')) {
     /**
      * Create a new Collection instance.
      *
-     * @param array  $items     Initial data
-     * @param string $wildcard  Wildcard segment token (default '*')
+     * @see Collectable\Collection
+     *
+     * @param array array|string|object $items Initial data
+     * @param string $wildcard Wildcard segment token (default '*')
      * @param string $delimiter Path delimiter (default '.')
      */
     function collection(
-        array $items = [],
+        array|string|object $items = [],
         string $wildcard = '*',
         string $delimiter = '.'
     ): Collection {

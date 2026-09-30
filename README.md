@@ -93,8 +93,8 @@ $c = collection();
 $c = collection(['apple', 'banana', 'cherry']);
 ```
 
-### `make(array $items, string $wildcard = '*', string $delimiter = '.')`
-Create a collection from an array.
+### `make(array|string|object $items = [], string $wildcard = '*', string $delimiter = '.')`
+Create a new collection from an array, a JSON string, or an object exposing toArray() (e.g. Laravel collections) or implementing Traversable.
 ```php
 $c = Collection::make(['apple', 'banana', 'cherry']);
 ```
@@ -1162,11 +1162,11 @@ $c->implode(', '); // join scalar items
 
 ## Serialization
 
-### `toJson(int $flags = 0)` / `toPrettyJson()`
+### `toJson(int $flags = 0)` / `toPrettyJson(int $flags = 0)`
 Convert the collection to a JSON string.
 ```php
-$c->toJson();
-$c->toPrettyJson();
+$c->toJson(JSON_UNESCAPED_SLASHES);
+$c->toPrettyJson(JSON_UNESCAPED_SLASHES);
 ```
 
 ### `fromJson(string $json)` *(static)*

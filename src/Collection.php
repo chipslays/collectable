@@ -11,9 +11,11 @@ use Collectable\Contracts\Arrayable;
 use Collectable\Contracts\Collectable;
 use InvalidArgumentException;
 use IteratorAggregate;
+use JsonException;
 use OverflowException;
 use RuntimeException;
 use stdClass;
+use Traversable;
 use UnderflowException;
 use UnexpectedValueException;
 
@@ -23,6 +25,7 @@ use UnexpectedValueException;
  * Supports single-level access:  get('user.name')
  * Supports wildcard access:      get('users.*.name')
  * Supports nested wildcards:     get('users.*.emails.*.address')
+ * Supports named wildcards:      get('users.*[id].emails')
  *
  * Wildcard results preserve original keys as a nested structure,
  * so you always know which data belongs to which parent.
@@ -41,10 +44,35 @@ class Collection implements Collectable
     ) {}
 
     /**
-     * Create a new collection from an array.
+     * Create a new collection from an array, a JSON string, or an object
+     * exposing toArray() (e.g. Laravel collections) or implementing Traversable.
+     *
+     * @param  array<array-key, mixed>|string|object  $items
+     *
+     * @throws JsonException
+     * @throws InvalidArgumentException
      */
-    public static function make(array $items = [], string $wildcard = '*', string $delimiter = '.'): static
-    {
+    public static function make(
+        array|string|object $items = [],
+        string $wildcard = '*',
+        string $delimiter = '.',
+    ): static {
+        if (is_string($items)) {
+            $items = static::fromJson($items, $wildcard, $delimiter);
+
+            if (! is_array($items)) {
+                throw new InvalidArgumentException('JSON must decode to an array or object.');
+            }
+        } elseif (is_object($items)) {
+            $items = match (true) {
+                method_exists($items, 'toArray') => $items->toArray(),
+                $items instanceof Traversable => iterator_to_array($items),
+                default => throw new InvalidArgumentException(
+                    sprintf('Cannot create a collection from an instance of %s.', $items::class)
+                ),
+            };
+        }
+
         return new static($items, $wildcard, $delimiter);
     }
 
@@ -69,9 +97,9 @@ class Collection implements Collectable
     /**
      * Wrap a value into a Collection.
      *
-     * - Collection -> returned as-is
-     * - array      -> used directly
-     * - anything else -> wrapped in a single-element array
+     * - Collection     -> returned as-is
+     * - array          -> used directly
+     * - anything else  -> wrapped in a single-element array
      */
     public static function wrap(mixed $value): static
     {
@@ -1064,11 +1092,11 @@ class Collection implements Collectable
     /**
      * Convert the collection to a pretty-printed JSON string.
      *
-     * @example toPrettyJson()
+     * @example toPrettyJson(JSON_UNESCAPED_SLASHES)
      */
-    public function toPrettyJson(): string
+    public function toPrettyJson(int $flags = 0): string
     {
-        return $this->toJson(JSON_PRETTY_PRINT);
+        return $this->toJson(JSON_PRETTY_PRINT | $flags);
     }
 
     /**
@@ -3698,8 +3726,9 @@ class Collection implements Collectable
             dd($this->items);
         } else {
             var_dump($this->items);
-            exit(1);
         }
+
+        exit(1);
     }
 
     /**
