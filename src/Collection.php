@@ -7,8 +7,6 @@ namespace Collectable;
 use ArrayAccess;
 use ArrayIterator;
 use Collectable\Concerns\Macroable;
-use Collectable\Contracts\Arrayable;
-use Collectable\Contracts\Collectable;
 use InvalidArgumentException;
 use IteratorAggregate;
 use JsonException;
@@ -33,7 +31,7 @@ use UnexpectedValueException;
  * @template-implements ArrayAccess<string, mixed>
  * @template-implements IteratorAggregate<string|int, mixed>
  */
-class Collection implements Collectable
+class Collection
 {
     use Macroable;
 
