@@ -119,7 +119,7 @@ test('get() wildcard on missing key returns default', function () {
 });
 
 // ---------------------------------------------------------------------------
-// get() — wildcard key extraction *[key]
+// get() - wildcard key extraction *[key]
 // ---------------------------------------------------------------------------
 
 test('get() *[key] uses field value as result key instead of index', function () {
@@ -206,7 +206,7 @@ test('has() returns false for null value', function () {
 });
 
 test('has() returns true for false value (only null means absent)', function () {
-    // has() checks non-null — false !== null, so key is considered present
+    // has() checks non-null - false !== null, so key is considered present
     $c = Collection::make(['app' => ['debug' => false]]);
     expect($c->has('app.debug'))->toBeTrue();
 });
@@ -2199,7 +2199,7 @@ test('some() is alias for contains()', function () {
 test('containsStrict() uses strict comparison', function () {
     $c = Collection::make([['v' => 1], ['v' => '1']]);
     expect($c->containsStrict('v', 1))->toBeTrue();
-    // strict: '1' !== 1, so only the first matches — but containsStrict finds at least one
+    // strict: '1' !== 1, so only the first matches - but containsStrict finds at least one
     // The collection also has '1' but it doesn't match int 1 strictly -> only 1 match, still true
     $c2 = Collection::make([['v' => '1']]);
     expect($c2->containsStrict('v', 1))->toBeFalse();
@@ -2653,7 +2653,7 @@ test('ensure() works with class names', function () {
 });
 
 // ---------------------------------------------------------------------------
-// collection() — static alias for make()
+// collection() - static alias for make()
 // ---------------------------------------------------------------------------
 
 test('collection() creates a collection identical to make()', function () {
@@ -2663,7 +2663,7 @@ test('collection() creates a collection identical to make()', function () {
 });
 
 // ---------------------------------------------------------------------------
-// forget() — alias for remove()
+// forget() - alias for remove()
 // ---------------------------------------------------------------------------
 
 test('forget() removes a key', function () {
@@ -2708,7 +2708,7 @@ test('replaceRecursive() deep-replaces nested arrays', function () {
 });
 
 // ---------------------------------------------------------------------------
-// dot() — alias for flatten()
+// dot() - alias for flatten()
 // ---------------------------------------------------------------------------
 
 test('dot() flattens to dot-notation', function () {
@@ -2797,7 +2797,7 @@ test('splitIn() pads with empty groups when n > count', function () {
 });
 
 // ---------------------------------------------------------------------------
-// keyBy() — alias for mapBy()
+// keyBy() - alias for mapBy()
 // ---------------------------------------------------------------------------
 
 test('keyBy() re-indexes by key', function () {

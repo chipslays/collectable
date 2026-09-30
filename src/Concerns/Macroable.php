@@ -63,7 +63,7 @@ trait Macroable
     /**
      * Mix all public/protected methods of $mixin into the class as macros.
      *
-     * Each qualifying method on $mixin must return a Closure — that Closure
+     * Each qualifying method on $mixin must return a Closure - that Closure
      * becomes the macro body. Magic methods (__construct etc.) are skipped.
      *
      * @param bool $replace Whether to overwrite already-registered macros.
@@ -148,7 +148,7 @@ trait Macroable
 
         if ($macro instanceof Closure) {
             try {
-                // bindTo returns null for static closures — treat as error
+                // bindTo returns null for static closures - treat as error
                 $macro = $macro->bindTo($this, static::class)
                     ?? throw new RuntimeException();
             } catch (Throwable) {
@@ -182,7 +182,7 @@ trait Macroable
                 $macro = $macro->bindTo(null, static::class)
                     ?? throw new RuntimeException();
             } catch (Throwable) {
-                // Closure refuses binding entirely — call as-is
+                // Closure refuses binding entirely - call as-is
                 // (e.g. closures from readonly classes in future PHP)
             }
         }

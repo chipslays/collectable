@@ -81,7 +81,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     /**
      * Retrieve a value by dot-notation path and wrap the result in a new Collection.
      *
-     * Useful for wildcard paths that return nested arrays — instead of wrapping
+     * Useful for wildcard paths that return nested arrays - instead of wrapping
      * the result manually you get a Collection ready for further chaining.
      *
      * @example collect('users.*.emails.*.address')->flatten()->values()->toArray()
@@ -140,7 +140,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     /**
      * Unwrap a Collection or array into a plain PHP array.
      *
-     * Counterpart to wrap() — always returns a plain array.
+     * Counterpart to wrap() - always returns a plain array.
      *
      * @example unwrap($collection)  // same as $collection->toArray()
      * @example unwrap([1, 2, 3])    // returns as-is
@@ -178,7 +178,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     /**
      * Return the value at $path if it exists; otherwise set it to $default and return that.
      *
-     * $default may be a callable — it is invoked only when the path is missing,
+     * $default may be a callable - it is invoked only when the path is missing,
      * and its return value is stored and returned.
      *
      * @example getOrPut('cache.token', fn() => generateToken())
@@ -292,7 +292,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     }
 
     /**
-     * Alias for remove() — remove an item by dot-notation path.
+     * Alias for remove() - remove an item by dot-notation path.
      *
      * @example forget('user.name')
      * @example forget('items.0')
@@ -418,7 +418,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     /**
      * Append all values from $items, always re-indexing the appended portion.
      *
-     * Unlike merge(), numeric keys in $items never overwrite existing ones —
+     * Unlike merge(), numeric keys in $items never overwrite existing ones -
      * they are appended as new sequential entries.
      *
      * @example concat(['d', 'e'])  // appends 'd' and 'e' to the collection
@@ -458,8 +458,8 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     }
 
     /**
-     * Return a new Collection of items satisfying a callback, or — when a
-     * dot-notation path is given — items where the value at that path matches
+     * Return a new Collection of items satisfying a callback, or - when a
+     * dot-notation path is given - items where the value at that path matches
      * $value (strict) or is truthy when $value is omitted.
      *
      * @example filter(fn($u) => $u['active'])
@@ -553,10 +553,10 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     }
 
     /**
-     * Map items and remove results that are null or false — in a single pass.
+     * Map items and remove results that are null or false - in a single pass.
      *
      * Equivalent to map()->filter() but more efficient and intent-revealing.
-     * Values of 0, '', [] and true are kept — only null and false are discarded.
+     * Values of 0, '', [] and true are kept - only null and false are discarded.
      *
      * @example filterMap(fn($u) => $u['active'] ? $u['email'] : null)
      * @example filterMap(fn($n) => $n % 2 === 0 ? $n * 10 : false)
@@ -1054,8 +1054,8 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
      *
      * Without $depth (default INF) all levels are flattened.
      * Pass an integer to limit how many levels deep to descend:
-     *   flatten(1) — one level deep (equivalent to collapse())
-     *   flatten(2) — two levels deep, etc.
+     *   flatten(1) - one level deep (equivalent to collapse())
+     *   flatten(2) - two levels deep, etc.
      *
      * @example flatten()    // [[1, [2, 3]], [4]] -> [1, 2, 3, 4]
      * @example flatten(1)   // [[1, [2, 3]], [4]] -> [1, [2, 3], 4]
@@ -1131,7 +1131,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
      * Check whether the collection contains the given value, or at least one
      * item satisfies the callback.
      *
-     * Two-arg path form: contains('role', 'admin') — checks whether any item
+     * Two-arg path form: contains('role', 'admin') - checks whether any item
      * has that dot-notation path equal to that value (strict comparison).
      *
      * @example contains('Alice')
@@ -1196,7 +1196,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     }
 
     /**
-     * Alias for contains() — check if at least one item matches.
+     * Alias for contains() - check if at least one item matches.
      *
      * @example some(fn($u) => $u['active'])
      * @example some('role', 'admin')
@@ -1527,7 +1527,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     }
 
     /**
-     * Alias for avg() — return the average of all items or plucked path values.
+     * Alias for avg() - return the average of all items or plucked path values.
      */
     public function average(string|callable|null $pathOrCallback = null): float|null
     {
@@ -1675,7 +1675,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     }
 
     /**
-     * Return the statistical mode(s) — the most frequently occurring value(s).
+     * Return the statistical mode(s) - the most frequently occurring value(s).
      *
      * Returns a Collection of the most common values (multiple entries when tied).
      * Returns an empty Collection for an empty set.
@@ -2225,10 +2225,10 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     /**
      * Join all items into a string.
      *
-     * Two-argument path form: implode('name', ', ') — plucks 'name' from each
+     * Two-argument path form: implode('name', ', ') - plucks 'name' from each
      * item and joins with the given glue. Mirrors Laravel's behaviour.
      *
-     * One-argument form: implode(', ') — joins scalar items with the glue.
+     * One-argument form: implode(', ') - joins scalar items with the glue.
      *
      * @example implode(', ')              -> 'Alice, Bob'   (scalar items)
      * @example implode('name', ', ')      -> 'Alice, Bob'   (path + glue)
@@ -2419,7 +2419,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     }
 
     /**
-     * Alias for mapBy() — re-index the collection by a key or callback.
+     * Alias for mapBy() - re-index the collection by a key or callback.
      *
      * @example keyBy('id')
      * @example keyBy(fn($item) => $item['slug'])
@@ -2930,7 +2930,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     {
         $result = $this;
         foreach ($transformers as $path => $fn) {
-            // Wrap to pass only the value — lets callers use native functions
+            // Wrap to pass only the value - lets callers use native functions
             // like 'trim' or 'strtolower' that accept exactly one argument.
             $result = $result->mapPath((string) $path, fn($value) => $fn($value));
         }
@@ -3293,7 +3293,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     /**
      * Return items present in one collection but not both (symmetric difference).
      *
-     * Equivalent to (A ∖ B) ∪ (B ∖ A) — useful for "what changed" comparisons.
+     * Equivalent to (A ∖ B) ∪ (B ∖ A) - useful for "what changed" comparisons.
      * Uses PHP's loose string comparison (suitable for scalar collections).
      *
      * @example $old->symmetricDiff($new)  // items added or removed
@@ -3748,7 +3748,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
      * value is used as the result; otherwise $this is returned, making
      * conditional transformations safely chainable.
      *
-     * $condition may be a callable — it receives $this and its return value
+     * $condition may be a callable - it receives $this and its return value
      * is used as the boolean condition.
      *
      * @example when($isAdmin, fn($c) => $c->merge($adminItems))
@@ -3890,7 +3890,7 @@ class Collection implements ArrayAccess, Arrayable, Countable, IteratorAggregate
     }
 
     /**
-     * Called by json_encode() — returns the raw items array.
+     * Called by json_encode() - returns the raw items array.
      */
     #[\Override]
     public function jsonSerialize(): array

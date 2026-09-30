@@ -9,22 +9,22 @@
 ---
 
 > [!NOTE]
-> Native PHP array functions are a mess — `array_map`, `array_filter`, `usort`, `array_walk` all have inconsistent argument order, most of them don't chain, and processing nested data means writing loops inside loops. Collection is a standalone, zero-dependency package that works in any PHP project.
+> Native PHP array functions are a mess - `array_map`, `array_filter`, `usort`, `array_walk` all have inconsistent argument order, most of them don't chain, and processing nested data means writing loops inside loops. Collection is a standalone, zero-dependency package that works in any PHP project.
 
 ---
 
 ## Features
 
 - **Dot-notation & wildcards.**
-  - Access, write, filter, and remove deeply nested data with paths like `users.*.emails.*.address` or  `users.*[id].emails.*.address` — no more chaining `foreach` or unpacking nested arrays by hand. Wildcards work across `get`, `set`, `remove`, and most other methods, and you can key results by any field with `*[field]` syntax.
+  - Access, write, filter, and remove deeply nested data with paths like `users.*.emails.*.address` or  `users.*[id].emails.*.address` - no more chaining `foreach` or unpacking nested arrays by hand. Wildcards work across `get`, `set`, `remove`, and most other methods, and you can key results by any field with `*[field]` syntax.
 - **100+ methods, one fluent interface.**
-  - Filtering (`where`, `whereIn`, `whereBetween`, `whereContains`, `whereMatches`), transformation (`map`, `evolve`, `mapPath`, `flatMap`, `scan`), aggregates (`sum`, `avg`, `median`, `standardDeviation`, `percentage`), multi-column sorting, pagination, set operations (`diff`, `intersect`, `zip`, `crossJoin`, `symmetricDiff`) — everything chains, everything returns a collection.
+  - Filtering (`where`, `whereIn`, `whereBetween`, `whereContains`, `whereMatches`), transformation (`map`, `evolve`, `mapPath`, `flatMap`, `scan`), aggregates (`sum`, `avg`, `median`, `standardDeviation`, `percentage`), multi-column sorting, pagination, set operations (`diff`, `intersect`, `zip`, `crossJoin`, `symmetricDiff`) - everything chains, everything returns a collection.
 - **Explicit about mutation.**
   - Transforming methods return a new collection. Mutating methods (`push`, `pop`, `splice`, `transform`) are named and documented to make it obvious when you're changing state in place.
 - **Pipelines built in.**
   - `pipe`, `pipeThrough`, `tap`, `when`, `unless`, `whenEmpty` let you build readable processing chains without intermediate variables or broken-up logic.
 - **Macros.**
-  - Add your own methods to every collection at runtime — no subclassing required.
+  - Add your own methods to every collection at runtime - no subclassing required.
 - **ArrayAccess with dot-notation.**
   - `$c['user.address.city']` just works.
 
@@ -160,7 +160,7 @@ $c->put('name', 'Bob');
 
 ### `getOrPut(string $path, mixed $default)`
 Return the value if it exists; otherwise store and return `$default`.
-`$default` can be a callable — it is only called when the key is missing.
+`$default` can be a callable - it is only called when the key is missing.
 ```php
 $token = $c->getOrPut('cache.token', fn() => bin2hex(random_bytes(16)));
 ```
@@ -199,7 +199,7 @@ Collection::make(['a' => 1, 'b' => 2])->values()->all();
 ```
 
 ### `collect(?string $path)`
-Retrieve a path and wrap the result in a new collection — useful for chaining.
+Retrieve a path and wrap the result in a new collection - useful for chaining.
 ```php
 $c->collect('users')->where('active', true)->pluck('name');
 ```
@@ -600,14 +600,14 @@ Collection::make([1, 2, 3])->reverse()->all(); // [3, 2, 1]
 ```
 
 ### `transpose()`
-Transpose a matrix — rows become columns.
+Transpose a matrix - rows become columns.
 ```php
 Collection::make([[1, 2, 3], [4, 5, 6]])->transpose()->all();
 // [[1, 4], [2, 5], [3, 6]]
 ```
 
 ### `scan(callable $callback, mixed $initial = null)`
-Running fold — like `reduce()` but returns every intermediate value.
+Running fold - like `reduce()` but returns every intermediate value.
 ```php
 Collection::make([1, 2, 3, 4])->scan(fn($carry, $v) => $carry + $v, 0)->all();
 // [1, 3, 6, 10]
@@ -774,7 +774,7 @@ $c->contains(fn($v) => $v > 10);
 ```
 
 ### `doesntContain(...)` / `some(...)` / `containsStrict(...)`
-Variants of `contains()` — inverse, alias, and strict comparison.
+Variants of `contains()` - inverse, alias, and strict comparison.
 ```php
 $c->doesntContain('admin');
 $users->some('role', 'admin');
@@ -879,7 +879,7 @@ $c->merge(['d', 'e']);
 ```
 
 ### `mergeRecursive(array|Collection $items)`
-Deep-merge arrays — repeated string keys produce nested arrays.
+Deep-merge arrays - repeated string keys produce nested arrays.
 ```php
 $c->mergeRecursive(['meta' => ['extra' => true]]);
 ```
@@ -1241,7 +1241,7 @@ by writing `*[field]` in the path segment.
 $c->get('users.*[id].name');
 // [1337 => 'Alice', 1338 => 'Bob']
 
-// Nested wildcards — outer key comes from the user id
+// Nested wildcards - outer key comes from the user id
 $c->get('users.*[id].emails.*.address');
 // [1337 => [0 => 'alice@a.com'], 1338 => [0 => 'bob@b.com', 1 => 'bob2@b.com']]
 
